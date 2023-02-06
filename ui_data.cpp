@@ -3,6 +3,14 @@
 using namespace std;
 using namespace cv;
 
+bool getMode() {
+    string a;
+    cout << "\nTry real time stabilization mode? (y/n)" << endl;
+    cin >> a;
+    if (a == "y" || a == "Y") { return true; }
+    else { return false; };
+};
+
 string getVideoInfo(string &in, string &out, string &demo, string &stats) {
     cout << "\nEnter input video name: ";
     cin >> in;
@@ -18,7 +26,7 @@ string getVideoInfo(string &in, string &out, string &demo, string &stats) {
     return in, out, demo, stats;
 };
 
-int getUserValues(int &suavizado, int &zoom) {
+int getStabValues(int &suavizado, int &zoom) {
     cout << "\nEnter smoothing value in frames: ";
     cin >> suavizado;
     cout << "Enter border cropping value in pixels: ";

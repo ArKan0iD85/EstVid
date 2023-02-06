@@ -36,20 +36,31 @@ struct Trayectoria
     double a = 0; // angulo
 };
 
+bool getMode();
+
+void realStabilizator();
+
 string printBarProg(int x);
 
 string getVideoInfo(string &in, string &out, string &demo, string &stats);
 
-int getUserValues(int &suavizado, int &zoom);
+int getStabValues(int &suavizado, int &zoom);
 
 int getVideoData(VideoCapture video, int &max_frames, int &fps, int &frame_width, int &frame_height);
 
 void showInfo(string in, string out, int max, int fps, int width, int height, int suavizado, int zoom, bool demo);
 
-vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, vector <ParamTransformada> tr, int border, int max_frames, bool isStats, ofstream &out_transform);
+vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, vector <ParamTransformada> tr);
+vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, vector <ParamTransformada> tr, int max_frames, bool isStats, ofstream &out_transform);
 
+vector <Trayectoria> accumulateTransform(vector <ParamTransformada> traj);
 vector <Trayectoria> accumulateTransform(vector <ParamTransformada> traj, bool isStats, ofstream& out_trajectory);
 
-vector <Trayectoria> smoother(vector <Trayectoria> trajj, int suavizado, bool isStats, ofstream &out_smoothed_trajectory);
+vector <Trayectoria> smoothTransform(vector <Trayectoria> traj);
+vector <Trayectoria> smoothTransform(vector <Trayectoria> traj, int suavizado, bool isStats, ofstream &out_smoothed_trajectory);
+
+vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTraj, bool isStats, ofstream &out_new_transform);
+
+void videoWrite(VideoCapture input, string out, vector <ParamTransformada> new_prev_to_cur_transform, int width, int height, int fps, int maxFrames, int zoom, bool isDemo);
 
 #endif // !ESTVID_H

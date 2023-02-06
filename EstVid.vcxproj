@@ -138,10 +138,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="accumulator.cpp" />
+    <ClCompile Include="calcnew.cpp" />
+    <ClCompile Include="realStab.cpp" />
     <ClCompile Include="smoother.cpp" />
     <ClCompile Include="ui_data.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stabilizer.cpp" />
+    <ClCompile Include="videowritter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="estvid.h" />
