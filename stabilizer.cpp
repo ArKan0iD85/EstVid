@@ -3,9 +3,8 @@
 using namespace std;
 using namespace cv;
 
-vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, vector <ParamTransformada> tr, int max_frames, bool isStats, ofstream& out_transform) {
-    Mat cur, cur_grey, cur2, prev, prev_grey, last_T;
-    Mat T(2, 3, CV_64F);
+vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &prev, Mat &T, vector <ParamTransformada> tr, int max_frames, bool isStats, ofstream& out_transform) {
+    Mat cur_grey, cur2, prev_grey, last_T;
     int k = 1;
     int progress = 0;
 
@@ -71,12 +70,6 @@ vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, vector <ParamTra
         k++;
     }
 
-    cur.release();
-    //cur2.release();
-    cur_grey.release();
-    //prev.release();
-    prev_grey.release();
-    T.release();
     last_T.release();
 
     return tr;

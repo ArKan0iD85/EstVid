@@ -51,7 +51,7 @@ int getVideoData(VideoCapture video, int &max_frames, int &fps, int &frame_width
 void showInfo(string in, string out, int max, int fps, int width, int height, int suavizado, int zoom, bool demo);
 
 vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, vector <ParamTransformada> tr);
-vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, vector <ParamTransformada> tr, int max_frames, bool isStats, ofstream &out_transform);
+vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat  &prev, Mat &T, vector <ParamTransformada> tr, int max_frames, bool isStats, ofstream &out_transform);
 
 vector <Trayectoria> accumulateTransform(vector <ParamTransformada> traj);
 vector <Trayectoria> accumulateTransform(vector <ParamTransformada> traj, bool isStats, ofstream& out_trajectory);
@@ -61,6 +61,6 @@ vector <Trayectoria> smoothTransform(vector <Trayectoria> traj, int suavizado, b
 
 vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTraj, bool isStats, ofstream &out_new_transform);
 
-void videoWrite(VideoCapture input, string out, vector <ParamTransformada> new_prev_to_cur_transform, int width, int height, int fps, int maxFrames, int zoom, bool isDemo);
+void videoWrite(VideoCapture inVid, VideoWriter outVid, Mat T, int aspectRatio, int delay, vector <ParamTransformada> newTrans, int maxFrames, int zoom, bool demo);
 
 #endif // !ESTVID_H

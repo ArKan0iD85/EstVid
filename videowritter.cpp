@@ -3,23 +3,15 @@
 using namespace std;
 using namespace cv;
 
-void videoWrite(VideoCapture input, string output, vector <ParamTransformada> new_prev_to_cur_transform, int width, int height, int fps, int maxFrames, int zoom, bool isDemo) {
-    input.set(CAP_PROP_POS_FRAMES, 0);
-    Mat cur, cur2, frame, canvas;
-    Mat T(2, 3, CV_64F);
-    VideoCapture in_aux = input;
+void videoWrite(VideoCapture cap, VideoWriter outVideo, Mat T, int aspectRatio, int wK_delay, vector <ParamTransformada> new_prev_to_cur_transform, int max_frames, int ZOOM_IMAGEN, bool isDemo) {
+    cap.set(CAP_PROP_POS_FRAMES, 0);
+    Mat cur, cur2, canvas;
+    int progress = 0;
     int k = 0;
-    int wK_delay = int(1000 / fps);
 
-    in_aux >> frame;
-    int aspect = zoom * frame.rows / frame.cols; // cogemos la relación de aspecto correcta
-    int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
-
-    VideoWriter outVideo(output, fourcc, fps, Size(width, height));
-
-    cout << "\n\nCreating stabilised video..." << endl;
-    while (k < maxFrames - 1) { // no procesamos el último frame, ya que no tiene una transformada de trayectoria válida
-        input >> cur;
+    cout << "\nCreating stabilised video..." << endl;
+    while (k < max_frames - 1) { // no procesamos el último frame, ya que no tiene una transformada de trayectoria válida
+        cap >> cur;
 
         if (cur.data == NULL) {
             break;
@@ -35,7 +27,7 @@ void videoWrite(VideoCapture input, string output, vector <ParamTransformada> ne
 
         warpAffine(cur, cur2, T, cur.size());
 
-        cur2 = cur2(Range(aspect, cur2.rows - aspect), Range(aspect, cur2.cols - aspect));
+        cur2 = cur2(Range(aspectRatio, cur2.rows - aspectRatio), Range(ZOOM_IMAGEN, cur2.cols - ZOOM_IMAGEN));
 
         // Igualamos el tamaño de cur2 al del original cur, para facilitar la comparación
         resize(cur2, cur2, cur.size());
@@ -58,18 +50,13 @@ void videoWrite(VideoCapture input, string output, vector <ParamTransformada> ne
             waitKey(wK_delay);
         }
 
-        int progress = (k * 100 / maxFrames);
+        progress = (k * 100 / max_frames);
         cout << "\r" << setw(-10) << printBarProg(progress) << " " << progress + 1 << "% completed." << flush;
         k++;
     }
     cout << "\nOperation completed successfully.\n" << endl;
     cout << "\nPlease check the folder \\output for the stabilised video.\n\n" << endl;
 
-    cur.release();
     cur2.release();
-    frame.release();
     canvas.release();
-    T.release();
-    in_aux.release();
-    outVideo.release();
 };
