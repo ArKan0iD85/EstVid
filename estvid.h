@@ -38,7 +38,7 @@ struct Trayectoria
 
 bool getMode();
 
-void realStabilizator();
+int realStabilizator();
 
 string printBarProg(int x);
 
@@ -59,6 +59,7 @@ vector <Trayectoria> accumulateTransform(vector <ParamTransformada> traj, bool i
 vector <Trayectoria> smoothTransform(vector <Trayectoria> traj);
 vector <Trayectoria> smoothTransform(vector <Trayectoria> traj, int suavizado, bool isStats, ofstream &out_smoothed_trajectory);
 
+vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev_to_cur_transform, vector <Trayectoria> smoothed_trajectory);
 vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTraj, bool isStats, ofstream &out_new_transform);
 
 void videoWrite(VideoCapture inVid, VideoWriter outVid, Mat T, int aspectRatio, int delay, vector <ParamTransformada> newTrans, int maxFrames, int zoom, bool demo);

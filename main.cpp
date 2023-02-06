@@ -88,7 +88,8 @@ int main()
         VideoWriter outVideo(output, fourcc, fps, Size(frame_width, frame_height));
 
         videoWrite(cap, outVideo, T, aspectRatio, wK_delay, new_prev_to_cur_transform, max_frames, ZOOM_IMAGEN, isDemo);
-
+        
+        // Release resources
         cap.release();
         cur.release();
         prev.release();
