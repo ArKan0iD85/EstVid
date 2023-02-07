@@ -5,7 +5,7 @@ using namespace cv;
 
 bool getMode() {
     string a;
-    cout << "\nTry real time stabilization mode? (y/n)" << endl;
+    cout << "\nReal time stabilization mode? (y/n)" << endl;
     cin >> a;
     if (a == "y" || a == "Y") { return true; }
     else { return false; };
@@ -18,9 +18,9 @@ string getVideoInfo(string &in, string &out, string &demo, string &stats) {
     cout << "Enter output video name: ";
     cin >> out;
     out = "../../../output/" + out;// +".mp4";
-    cout << "\nWant a side-by-side demo? (y/n)" << endl;
+    cout << "\nSide-by-side demo? (y/n)" << endl;
     cin >> demo;
-    cout << "\nWant to output statistical data? (y/n)" << endl;
+    cout << "\nOutput statistical data? (y/n)" << endl;
     cin >> stats;
 
     return in, out, demo, stats;

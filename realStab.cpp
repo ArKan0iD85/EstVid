@@ -207,13 +207,13 @@ int realStabilizator() {
         if (GetAsyncKeyState(VK_ESCAPE)) cont = false;
     }
 
-
     cap.release();
     frame1.release();
     frame2.release();
     gray1.release();
     gray2.release();
     outVideo.release();
+    canvas.release();
     destroyAllWindows();
 
     return 0;
