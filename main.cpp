@@ -56,6 +56,8 @@ int main()
         if (!cap.isOpened())
         {
             cout << "\nCannot open the file.\n" << endl;
+            system("pause"); // WINDOWS ONLY
+
             return -1;
         }
 
