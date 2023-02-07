@@ -87,7 +87,7 @@ int main()
         int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
         VideoWriter outVideo(output, fourcc, fps, Size(frame_width, frame_height));
 
-        videoWrite(cap, outVideo, T, aspectRatio, wK_delay, new_prev_to_cur_transform, max_frames, ZOOM_IMAGEN, isDemo);
+        videoWrite(cap, outVideo, T, new_prev_to_cur_transform, aspectRatio, wK_delay, max_frames, ZOOM_IMAGEN, isDemo);
         
         // Release resources
         cap.release();

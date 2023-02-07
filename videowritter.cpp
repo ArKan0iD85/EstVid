@@ -3,7 +3,7 @@
 using namespace std;
 using namespace cv;
 
-void videoWrite(VideoCapture cap, VideoWriter outVideo, Mat T, int aspectRatio, int wK_delay, vector <ParamTransformada> new_prev_to_cur_transform, int max_frames, int ZOOM_IMAGEN, bool isDemo) {
+void videoWrite(VideoCapture cap, VideoWriter outVideo, Mat T, vector <ParamTransformada> new_prev_to_cur_transform, int aspectRatio, int wK_delay, int max_frames, int ZOOM_IMAGEN, bool isDemo) {
     cap.set(CAP_PROP_POS_FRAMES, 0);
     Mat cur, cur2, canvas;
     int progress = 0;
