@@ -61,9 +61,9 @@ int getVideoData(VideoCapture video, int &max_frames, int &fps, int &frame_width
             cout << "--------------------------------------------------\n\n" << endl;
             break;
         }
-        video.release();
         frame.release();
     }
+    video.release();
 
     return max_frames, fps, frame_width, frame_height;
 };
