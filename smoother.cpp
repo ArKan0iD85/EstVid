@@ -32,32 +32,3 @@ vector <Trayectoria> smoothTransform(vector <Trayectoria> trajectory, int suaviz
     }
     return smoothed_trajectory;
 };
-
-vector <Trayectoria> smoothTransform(vector <Trayectoria> trajectory) {
-    vector <Trayectoria> smoothed_trajectory;
-    int suavizado = 10;
-
-    for (size_t i = 0; i < trajectory.size(); i++) {
-        double sum_x = 0;
-        double sum_y = 0;
-        double sum_a = 0;
-        int count = 0;
-
-        for (int j = -suavizado; j <= suavizado; j++) {
-            if (i + j >= 0 && i + j < trajectory.size()) {
-                sum_x += trajectory[i + j].x;
-                sum_y += trajectory[i + j].y;
-                sum_a += trajectory[i + j].a;
-
-                count++;
-            }
-        }
-
-        double avg_a = sum_a / count;
-        double avg_x = sum_x / count;
-        double avg_y = sum_y / count;
-
-        smoothed_trajectory.push_back(Trayectoria(avg_x, avg_y, avg_a));
-    }
-    return smoothed_trajectory;
-};
