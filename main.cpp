@@ -75,7 +75,7 @@ int main()
         vector <Trayectoria> trajectory = accumulateTransform(prev_to_cur_transform, isStats, out_trajectory);
 
         // Paso 3 - Suavizamos la trayectoria usando una ventana deslizante usando los valores medios
-        vector <Trayectoria> smoothed_trajectory = smoothTransform(trajectory, VALOR_SUAVIZADO, isStats, out_smoothed_trajectory); // vector de trayectoria suavizada para todos los frames
+        vector <Trayectoria> smoothed_trajectory = smoothTransform(trajectory, VALOR_SUAVIZADO, isStats, out_smoothed_trajectory);
 
         // Paso 4 - Generamos un nuevo set de frames previos al actual, el cual acabará teniendo una trayectoria entre frames igual a la trayectoria suavizada.
         vector <ParamTransformada> new_prev_to_cur_transform = calcNewFrames(prev_to_cur_transform, smoothed_trajectory, isStats, out_new_transform);

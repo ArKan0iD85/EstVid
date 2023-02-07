@@ -54,9 +54,9 @@ vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat  &
 
 vector <Trayectoria> accumulateTransform(vector <ParamTransformada> traj, bool isStats, ofstream& out_trajectory);
 
-vector <Trayectoria> smoothTransform(vector <Trayectoria> traj, int suavizado, bool isStats, ofstream &out_smoothed_trajectory);
+vector <Trayectoria> smoothTransform(vector <Trayectoria> trajectory, int suavizado, bool isStats, ofstream &out_smoothed_trajectory);
 
-vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTraj, bool isStats, ofstream &out_new_transform);
+vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTrajectory, bool isStats, ofstream &out_new_transform);
 
 void videoWrite(VideoCapture inVid, VideoWriter outVid, Mat T, int aspectRatio, int delay, vector <ParamTransformada> newTrans, int maxFrames, int zoom, bool demo);
 

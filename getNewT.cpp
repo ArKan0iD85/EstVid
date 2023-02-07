@@ -3,7 +3,7 @@
 using namespace std;
 using namespace cv;
 
-vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTraj, bool isStats, ofstream &out_new_transform) {
+vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTrajectory, bool isStats, ofstream &out_new_transform) {
     // Transformada de acumulación de frame a frame
     double x = 0;
     double y = 0;
@@ -16,9 +16,9 @@ vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector
         a += prev[i].da;
 
         // target - current
-        double diff_x = smoothTraj[i].x - x;
-        double diff_y = smoothTraj[i].y - y;
-        double diff_a = smoothTraj[i].a - a;
+        double diff_x = smoothTrajectory[i].x - x;
+        double diff_y = smoothTrajectory[i].y - y;
+        double diff_a = smoothTrajectory[i].a - a;
 
         double dx = prev[i].dx + diff_x;
         double dy = prev[i].dy + diff_y;

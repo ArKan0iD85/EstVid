@@ -139,12 +139,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="accumulator.cpp" />
-    <ClCompile Include="getNewT.cpp" />
+    <ClCompile Include="getnewT.cpp" />
     <ClCompile Include="realStab.cpp" />
     <ClCompile Include="smoother.cpp" />
     <ClCompile Include="ui_data.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="getOldT.cpp" />
+    <ClCompile Include="getoldT.cpp" />
     <ClCompile Include="videowritter.cpp" />
   </ItemGroup>
   <ItemGroup>
