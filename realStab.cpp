@@ -25,6 +25,7 @@ int realStabilizator() {
     Mat T(2, 3, CV_64F);
     bool cont = true;
     bool isStat = false;
+    bool writeVideo = false;
     int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
     int VALOR_SUAVIZADO = 2;
     int ZOOM_IMAGEN = 100;
@@ -45,7 +46,7 @@ int realStabilizator() {
     cvtColor(frame1, gray1, COLOR_BGR2GRAY);
     
     int aspectRatio = ZOOM_IMAGEN * frame1.rows / frame1.cols;
-    outVideo.open("../../../output/realOutput.mp4", fourcc, 30, frame1.size());
+    if (writeVideo) outVideo.open("../../../output/realOutput.mp4", fourcc, 30, frame1.size());
 
     vector <ParamTransformada> prev_to_cur_transform;
 
@@ -188,7 +189,7 @@ int realStabilizator() {
         // Igualamos el tamaño de cur2 al del original cur, para facilitar la comparación
         resize(frameOut, frameOut, frame2.size());
 
-        outVideo.write(frameOut);
+        if (writeVideo) outVideo.write(frameOut);
 
         canvas = Mat::zeros(frame2.rows, frame2.cols * 2 + 10, frame2.type());
 
