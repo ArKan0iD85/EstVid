@@ -4,7 +4,7 @@ using namespace std;
 using namespace cv;
 
 vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> original_trajectory, vector <Trayectoria> smoothed_trajectory, bool isStats, ofstream &out_new_transform) {
-    // Transformada de acumulación de frame a frame
+    // Aplicamos la trayectoria suavizada a la transformada original.
     double x = 0;
     double y = 0;
     double a = 0;

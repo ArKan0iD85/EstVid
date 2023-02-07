@@ -57,6 +57,7 @@ void videoWrite(VideoCapture cap, VideoWriter outVideo, Mat T, int aspectRatio, 
     cout << "\nOperation completed successfully.\n" << endl;
     cout << "\nPlease check the folder \\output for the stabilised video.\n\n" << endl;
 
+    cur.release();
     cur2.release();
     canvas.release();
 };
