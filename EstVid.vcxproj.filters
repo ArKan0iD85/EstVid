@@ -36,7 +36,7 @@
     <ClCompile Include="getnewT.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="videowritter.cpp">
+    <ClCompile Include="videowriter.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
