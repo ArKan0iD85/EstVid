@@ -56,7 +56,7 @@ vector <Trayectoria> accumulateTransform(vector <ParamTransformada> traj, bool i
 
 vector <Trayectoria> smoothTransform(vector <Trayectoria> trajectory, int suavizado, bool isStats, ofstream &out_smoothed_trajectory);
 
-vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> prev, vector <Trayectoria> smoothTrajectory, bool isStats, ofstream &out_new_transform);
+vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> original_trajectory, vector <Trayectoria> smoothed_trajectory, bool isStats, ofstream &out_new_transform);
 
 void videoWrite(VideoCapture inVid, VideoWriter outVid, Mat T, int aspectRatio, int delay, vector <ParamTransformada> newTrans, int maxFrames, int zoom, bool demo);
 
