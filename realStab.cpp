@@ -18,17 +18,19 @@ int realStabilizator() {
     ofstream out_trajectory("../../../stats/trajectory.txt");
     ofstream out_smoothed_trajectory("../../../stats/smoothed_trajectory.txt");
     ofstream out_new_transform("../../../stats/new_prev_to_cur_transformation.txt");
-    
-    VideoWriter outVideo;
+        
+    // User variables
+    int VALOR_SUAVIZADO = 50;
+    int ZOOM_IMAGEN = 50;
+    bool isStat = false;
+    bool writeVideo = false;
 
+    // Other variables
+    VideoWriter outVideo;
     Mat frame1, frame2, frameOut, gray1, gray2, last_T, canvas;
     Mat T(2, 3, CV_64F);
     bool cont = true;
-    bool isStat = false;
-    bool writeVideo = false;
     int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
-    int VALOR_SUAVIZADO = 2;
-    int ZOOM_IMAGEN = 100;
 
     VideoCapture cap(0);
     int frame_width = int(cap.get(CAP_PROP_FRAME_WIDTH));
@@ -201,7 +203,7 @@ int realStabilizator() {
             resize(canvas, canvas, Size(int(canvas.cols / 1.25), int(canvas.rows / 1.25)));
         }
 
-        imshow("Before and after", canvas);
+        imshow("Original vs stabilized", canvas);
         waitKey(1);
 
         if (GetAsyncKeyState(VK_ESCAPE)) cont = false;

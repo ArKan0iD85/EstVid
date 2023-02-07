@@ -21,7 +21,7 @@
     <ClCompile Include="ui_data.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="stabilizer.cpp">
+    <ClCompile Include="getOldT.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="smoother.cpp">
@@ -33,7 +33,7 @@
     <ClCompile Include="realStab.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="calcnew.cpp">
+    <ClCompile Include="getNewT.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="videowritter.cpp">
