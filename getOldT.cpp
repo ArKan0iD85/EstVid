@@ -3,7 +3,7 @@
 using namespace std;
 using namespace cv;
 
-vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &prev, Mat &T, vector <ParamTransformada> tr, int max_frames, bool isStats, ofstream& out_transform) {
+vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &prev, Mat &T, vector <ParamTransformada> vector_transform, int max_frames, bool isStats, ofstream& out_transform) {
     Mat cur_grey, prev_grey, last_T;
     int k = 1;
     int progress = 0;
@@ -24,7 +24,7 @@ vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &p
 
         // Vector de previo a actual
         vector <Point2f> prev_corner, cur_corner;
-        vector <Point2f> prev_corner2, cur_corner2;
+        vector <Point2f> good_prev_corner, good_cur_corner;
         vector <uchar> status;
         vector <float> err;
 
@@ -37,13 +37,13 @@ vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &p
         // Limpiamos las malas correspondencias
         for (size_t i = 0; i < status.size(); i++) {
             if (status[i]) {
-                prev_corner2.push_back(prev_corner[i]);
-                cur_corner2.push_back(cur_corner[i]);
+                good_prev_corner.push_back(prev_corner[i]);
+                good_cur_corner.push_back(cur_corner[i]);
             }
         }
 
         // solo traslación y rotación
-        T = estimateAffinePartial2D(prev_corner2, cur_corner2);
+        T = estimateAffinePartial2D(good_prev_corner, good_cur_corner);
 
         // En algunos casos extraños, no se encuentra la transformada. Usaremos la última correcta.
         if (T.data == NULL) {
@@ -57,7 +57,7 @@ vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &p
         double dy = T.at<double>(1, 2);
         double da = atan2(T.at<double>(1, 0), T.at<double>(0, 0));
 
-        tr.push_back(ParamTransformada(dx, dy, da));
+        vector_transform.push_back(ParamTransformada(dx, dy, da));
 
         if (isStats) out_transform << k << " " << dx << " " << dy << " " << da << endl; // Para analisis estadistico
 
@@ -74,5 +74,5 @@ vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &p
     prev_grey.release();
     last_T.release();
 
-    return tr;
+    return vector_transform;
 };
