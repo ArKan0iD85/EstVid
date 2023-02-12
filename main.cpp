@@ -45,18 +45,43 @@ int main(int argc, char* argv[])
     int max_frames, fps, frame_width, frame_height;
     bool isDemo = false;
     bool isStats = false;
-    int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
 
     for (int i = 5; i < argc; i++) {
         if (strcmp(argv[i], "-d") == 0) { isDemo = true; }
         if (strcmp(argv[i], "-s") == 0) { isStats = true; }
     }
 
+    if (CreateDirectory(L"stats", NULL))
+    {
+        // Directorio creado
+    }
+    else if (ERROR_ALREADY_EXISTS == GetLastError())
+    {
+        cerr << "Directory already exists." << endl;
+    }
+    else
+    {
+        cerr << "Cannot create the required directory '/stats'." << endl;
+    }
+    
+    if (CreateDirectory(L"output", NULL))
+    {
+        // Directorio creado
+    }
+    else if (ERROR_ALREADY_EXISTS == GetLastError())
+    {
+        cerr << "Directory already exists." << endl;
+    }
+    else
+    {
+        cerr << "Cannot create the required directory '/output'." << endl;
+    }
+
     // Para analisis estadistico
-    ofstream out_transform("prev_to_cur_transformation.txt");
-    ofstream out_trajectory("trajectory.txt");
-    ofstream out_smoothed_trajectory("smoothed_trajectory.txt");
-    ofstream out_new_transform("new_prev_to_cur_transformation.txt");
+    ofstream out_transform("stats/prev_to_cur_transformation.txt");
+    ofstream out_trajectory("stats/trajectory.txt");
+    ofstream out_smoothed_trajectory("stats/smoothed_trajectory.txt");
+    ofstream out_new_transform("stats/new_prev_to_cur_transformation.txt");
 
     VideoCapture cap(input);
     // Compruebo que existe el video de entrada
@@ -69,17 +94,6 @@ int main(int argc, char* argv[])
     }
 
     getVideoData(cap, max_frames, fps, frame_width, frame_height);
-
-    // Compruebo que puedo crear el video de salida
-    VideoWriter outVideo(output, fourcc, fps, Size(frame_width, frame_height));
-
-    if (!outVideo.isOpened())
-    {
-        cerr << "\nCannot create the output file.\n" << endl;
-        system("pause"); // WINDOWS ONLY
-
-        return -1;
-    }
 
     showInfo(input, output, max_frames, fps, frame_width, frame_height, VALOR_SUAVIZADO, ZOOM_IMAGEN, isDemo, isStats);
     system("pause"); // WINDOWS ONLY
@@ -99,6 +113,18 @@ int main(int argc, char* argv[])
     // Paso 5 - Aplicamos la nueva transformada al video y lo mostramos
     int wK_delay = int(1000 / fps);
     int aspectRatio = ZOOM_IMAGEN * prev.rows / prev.cols; // cogemos la relación de aspecto correcta
+    int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
+
+    VideoWriter outVideo("./output/" + output, fourcc, fps, Size(frame_width, frame_height));
+
+    // Compruebo que puedo crear el video de salida
+    if (!outVideo.isOpened())
+    {
+        cerr << "\nCannot create the output file.\n" << endl;
+        system("pause"); // WINDOWS ONLY
+
+        return -1;
+    }
 
     videoWrite(cap, outVideo, T, new_prev_to_cur_transform, aspectRatio, wK_delay, max_frames, ZOOM_IMAGEN, isDemo);
     
@@ -110,9 +136,9 @@ int main(int argc, char* argv[])
     outVideo.release();
 
     if(isDemo) { 
-        //waitKey(1000);
+        waitKey(500);
         VideoCapture vid1(input);
-        VideoCapture vid2(output);
+        VideoCapture vid2("./output/" + output);
         if (!vid1.isOpened() || !vid2.isOpened())
         {
             cerr << "\nCannot read the videos.\n" << endl;
@@ -126,7 +152,7 @@ int main(int argc, char* argv[])
         vid2.release();
     }
 
-    cout << "\nPlease check the program folder for the stabilised video: " << output <<  "\n\n" << endl;
+    cout << "\nPlease check the /output folder for the stabilised video '"<< output <<  "'\n\n" << endl;
 
     destroyAllWindows();
 
