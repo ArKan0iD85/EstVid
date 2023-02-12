@@ -139,8 +139,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="accumulator.cpp" />
+    <ClCompile Include="demo.cpp" />
     <ClCompile Include="getnewT.cpp" />
-    <ClCompile Include="realStab.cpp" />
     <ClCompile Include="smoother.cpp" />
     <ClCompile Include="ui_data.cpp" />
     <ClCompile Include="main.cpp" />

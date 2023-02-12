@@ -36,19 +36,13 @@ struct Trayectoria
     double a = 0; // angulo
 };
 
-bool getMode();
-
-int realStabilizator();
-
 string printBarProg(int x);
 
 string getVideoInfo(string &in, string &out, string &demo, string &stats);
 
-int getStabValues(int &suavizado, int &zoom);
-
 int getVideoData(VideoCapture video, int &max_frames, int &fps, int &frame_width, int &frame_height);
 
-void showInfo(string in, string out, int max, int fps, int width, int height, int suavizado, int zoom, bool demo);
+void showInfo(string in, string out, int max, int fps, int width, int height, int suavizado, int zoom, bool demo, bool stats);
 
 vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat  &prev, Mat &T, vector <ParamTransformada> tr, int max_frames, bool isStats, ofstream &out_transform);
 
@@ -59,5 +53,7 @@ vector <Trayectoria> smoothTransform(vector <Trayectoria> trajectory, int suaviz
 vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> original_trajectory, vector <Trayectoria> smoothed_trajectory, bool isStats, ofstream &out_new_transform);
 
 void videoWrite(VideoCapture inVid, VideoWriter outVid, Mat T, vector <ParamTransformada> newTrans, int aspectRatio, int delay, int maxFrames, int zoom, bool demo);
+
+int displayDemo(VideoCapture inVid, VideoCapture outVidStr, int maxframes, int delay);
 
 #endif // !ESTVID_H

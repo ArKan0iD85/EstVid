@@ -28,78 +28,107 @@
 using namespace std;
 using namespace cv;
 
-int main()
+int main(int argc, char* argv[])
 {
-    bool mode = getMode();
-    if (mode) { realStabilizator(); }
-    else {
-        // Para analisis estadistico
-        ofstream out_transform("../../../stats/prev_to_cur_transformation.txt");
-        ofstream out_trajectory("../../../stats/trajectory.txt");
-        ofstream out_smoothed_trajectory("../../../stats/smoothed_trajectory.txt");
-        ofstream out_new_transform("../../../stats/new_prev_to_cur_transformation.txt");
+    if (argc < 5) {
+        cout << "\nMissing parameters to load the program\n" << endl;
+        return 0;
+    }
 
-        // Paso 0 - Creación de variables. 
-        int VALOR_SUAVIZADO = 0; // En frames. Mayor valor, más estabilidad del video, pero menos reactivo a movimientos rápidos.
-        int ZOOM_IMAGEN = 0; // En pixeles. Recorta la imagen para reducir los bordes negros resultantes de la estabilización (hace zoom en la imagen). Mayor valor, más zoom y menos borde negro.
-        Mat cur, prev;
-        Mat T(2, 3, CV_64F);
-        string input, output, demo, stats;
-        int max_frames, fps, frame_width, frame_height;
-        bool isDemo = false;
-        bool isStats = false;
+    // Paso 0 - Creación de variables. 
+    string input = argv[1];
+    string output = argv[2];
+    int VALOR_SUAVIZADO = stoi(argv[3]); // En frames. Mayor valor, más estabilidad del video, pero menos reactivo a movimientos rápidos.
+    int ZOOM_IMAGEN = stoi(argv[4]); // En pixeles. Recorta la imagen para reducir los bordes negros resultantes de la estabilización (hace zoom en la imagen). Mayor valor, más zoom y menos borde negro.
+    Mat cur, prev;
+    Mat T(2, 3, CV_64F);
+    int max_frames, fps, frame_width, frame_height;
+    bool isDemo = false;
+    bool isStats = false;
+    int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
 
-        getVideoInfo(input, output, demo, stats);
+    for (int i = 5; i < argc; i++) {
+        if (strcmp(argv[i], "-d") == 0) { isDemo = true; }
+        if (strcmp(argv[i], "-s") == 0) { isStats = true; }
+    }
 
-        VideoCapture cap(input);
-        // Compruebo que existe el video
-        if (!cap.isOpened())
+    // Para analisis estadistico
+    ofstream out_transform("prev_to_cur_transformation.txt");
+    ofstream out_trajectory("trajectory.txt");
+    ofstream out_smoothed_trajectory("smoothed_trajectory.txt");
+    ofstream out_new_transform("new_prev_to_cur_transformation.txt");
+
+    VideoCapture cap(input);
+    // Compruebo que existe el video de entrada
+    if (!cap.isOpened())
+    {
+        cerr << "\nCannot open the input file.\n" << endl;
+        system("pause"); // WINDOWS ONLY
+
+        return -1;
+    }
+
+    getVideoData(cap, max_frames, fps, frame_width, frame_height);
+
+    // Compruebo que puedo crear el video de salida
+    VideoWriter outVideo(output, fourcc, fps, Size(frame_width, frame_height));
+
+    if (!outVideo.isOpened())
+    {
+        cerr << "\nCannot create the output file.\n" << endl;
+        system("pause"); // WINDOWS ONLY
+
+        return -1;
+    }
+
+    showInfo(input, output, max_frames, fps, frame_width, frame_height, VALOR_SUAVIZADO, ZOOM_IMAGEN, isDemo, isStats);
+    system("pause"); // WINDOWS ONLY
+
+    // Paso 1 - Obtengo la transformada de los frames previos al frame actual, para todos los frames (dx, dy, da).    
+    vector <ParamTransformada> prev_to_cur_transform = prev_cur_Transform(cap, cur, prev, T, prev_to_cur_transform, max_frames, isStats, out_transform);
+        
+    // Paso 2 - Acumulamos las transformadas para obtener la trayectoria     
+    vector <Trayectoria> trajectory = accumulateTransform(prev_to_cur_transform, isStats, out_trajectory);
+
+    // Paso 3 - Suavizamos la trayectoria usando una ventana deslizante usando los valores medios
+    vector <Trayectoria> smoothed_trajectory = smoothTransform(trajectory, VALOR_SUAVIZADO, isStats, out_smoothed_trajectory);
+
+    // Paso 4 - Generamos un nuevo set de frames previos al actual, el cual acabará teniendo una trayectoria entre frames igual a la trayectoria suavizada.
+    vector <ParamTransformada> new_prev_to_cur_transform = calcNewFrames(prev_to_cur_transform, smoothed_trajectory, isStats, out_new_transform);
+
+    // Paso 5 - Aplicamos la nueva transformada al video y lo mostramos
+    int wK_delay = int(1000 / fps);
+    int aspectRatio = ZOOM_IMAGEN * prev.rows / prev.cols; // cogemos la relación de aspecto correcta
+
+    videoWrite(cap, outVideo, T, new_prev_to_cur_transform, aspectRatio, wK_delay, max_frames, ZOOM_IMAGEN, isDemo);
+    
+    // Release resources
+    cap.release();
+    cur.release();
+    prev.release();
+    T.release();
+    outVideo.release();
+
+    if(isDemo) { 
+        //waitKey(1000);
+        VideoCapture vid1(input);
+        VideoCapture vid2(output);
+        if (!vid1.isOpened() || !vid2.isOpened())
         {
-            cout << "\nCannot open the file.\n" << endl;
+            cerr << "\nCannot read the videos.\n" << endl;
             system("pause"); // WINDOWS ONLY
 
             return -1;
         }
+        displayDemo(vid1, vid2, max_frames, wK_delay);
 
-        getStabValues(VALOR_SUAVIZADO, ZOOM_IMAGEN);
-        getVideoData(cap, max_frames, fps, frame_width, frame_height);
-
-        if (demo == "y" || demo == "Y") isDemo = true;
-        if (stats == "y" || stats == "Y") isStats = true;
-
-        showInfo(input, output, max_frames, fps, frame_width, frame_height, VALOR_SUAVIZADO, ZOOM_IMAGEN, isDemo);
-        system("pause"); // WINDOWS ONLY
-
-        // Paso 1 - Obtengo la transformada de los frames previos al frame actual, para todos los frames (dx, dy, da).    
-        vector <ParamTransformada> prev_to_cur_transform = prev_cur_Transform(cap, cur, prev, T, prev_to_cur_transform, max_frames, isStats, out_transform);
-        
-        // Paso 2 - Acumulamos las transformadas para obtener la trayectoria     
-        vector <Trayectoria> trajectory = accumulateTransform(prev_to_cur_transform, isStats, out_trajectory);
-
-        // Paso 3 - Suavizamos la trayectoria usando una ventana deslizante usando los valores medios
-        vector <Trayectoria> smoothed_trajectory = smoothTransform(trajectory, VALOR_SUAVIZADO, isStats, out_smoothed_trajectory);
-
-        // Paso 4 - Generamos un nuevo set de frames previos al actual, el cual acabará teniendo una trayectoria entre frames igual a la trayectoria suavizada.
-        vector <ParamTransformada> new_prev_to_cur_transform = calcNewFrames(prev_to_cur_transform, smoothed_trajectory, isStats, out_new_transform);
-
-        // Paso 5 - Aplicamos la nueva transformada al video y lo mostramos
-        int wK_delay = int(1000 / fps);
-        int aspectRatio = ZOOM_IMAGEN * prev.rows / prev.cols; // cogemos la relación de aspecto correcta
-
-        int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
-        VideoWriter outVideo(output, fourcc, fps, Size(frame_width, frame_height));
-
-        videoWrite(cap, outVideo, T, new_prev_to_cur_transform, aspectRatio, wK_delay, max_frames, ZOOM_IMAGEN, isDemo);
-        
-        // Release resources
-        cap.release();
-        cur.release();
-        prev.release();
-        T.release();
-        outVideo.release();
-        destroyAllWindows();
-        
+        vid1.release();
+        vid2.release();
     }
+
+    cout << "\nPlease check the program folder for the stabilised video: " << output <<  "\n\n" << endl;
+
+    destroyAllWindows();
 
     return 0;
 }

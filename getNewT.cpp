@@ -28,5 +28,8 @@ vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> original_tra
 
         if (isStats) out_new_transform << (i + 1) << " " << dx << " " << dy << " " << da << endl; // Para analisis estadistico
     }
+
+    out_new_transform.close();
+
     return newFrames;
 };

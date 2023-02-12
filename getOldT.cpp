@@ -70,6 +70,7 @@ vector <ParamTransformada> prev_cur_Transform(VideoCapture cap, Mat &cur, Mat &p
         k++;
     }
 
+    out_transform.close();
     cur_grey.release();
     prev_grey.release();
     last_T.release();

@@ -3,38 +3,6 @@
 using namespace std;
 using namespace cv;
 
-bool getMode() {
-    string a;
-    cout << "\nReal time stabilization mode? (y/n)" << endl;
-    cin >> a;
-    if (a == "y" || a == "Y") { return true; }
-    else { return false; };
-};
-
-string getVideoInfo(string &in, string &out, string &demo, string &stats) {
-    cout << "\nEnter input video name: ";
-    cin >> in;
-    in = "../../../input/" + in; // +".mp4";
-    cout << "Enter output video name: ";
-    cin >> out;
-    out = "../../../output/" + out;// +".mp4";
-    cout << "\nSide-by-side demo? (y/n)" << endl;
-    cin >> demo;
-    cout << "\nOutput statistical data? (y/n)" << endl;
-    cin >> stats;
-
-    return in, out, demo, stats;
-};
-
-int getStabValues(int &suavizado, int &zoom) {
-    cout << "\nEnter smoothing value in frames: ";
-    cin >> suavizado;
-    cout << "Enter border cropping value in pixels: ";
-    cin >> zoom;
-
-    return suavizado, zoom;
-};
-
 int getVideoData(VideoCapture video, int &max_frames, int &fps, int &frame_width, int &frame_height) {
     fps = int(video.get(CAP_PROP_FPS));
     frame_width = int(video.get(CAP_PROP_FRAME_WIDTH));
@@ -68,7 +36,7 @@ int getVideoData(VideoCapture video, int &max_frames, int &fps, int &frame_width
     return max_frames, fps, frame_width, frame_height;
 };
 
-void showInfo(string in, string out, int max, int fps, int width, int height, int suavizado, int zoom, bool demo) {
+void showInfo(string in, string out, int max, int fps, int width, int height, int suavizado, int zoom, bool demo, bool stats) {
     cout << "\n\n" << endl;
     cout << "Video paths" << endl;
     cout << "--------------------------------------------------" << endl;
@@ -90,6 +58,8 @@ void showInfo(string in, string out, int max, int fps, int width, int height, in
     cout << "Image zoom value: " << zoom << " pixels" << endl;
     if (demo) { cout << "Side-by-side demonstration: Y" << endl; }
     else { cout << "Side-by-side demonstration: N" << endl; };
+    if (stats) { cout << "Output statistical data: Y" << endl; }
+    else { cout << "Output statistical data: N" << endl; };
     cout << "--------------------------------------------------\n\n" << endl;
 };
 

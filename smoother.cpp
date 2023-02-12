@@ -30,5 +30,8 @@ vector <Trayectoria> smoothTransform(vector <Trayectoria> trajectory, int suaviz
 
         if (isStats) out_smoothed_trajectory << (i + 1) << " " << avg_x << " " << avg_y << " " << avg_a << endl; // Para analisis estadistico
     }
+
+    out_smoothed_trajectory.close();
+
     return smoothed_trajectory;
 };

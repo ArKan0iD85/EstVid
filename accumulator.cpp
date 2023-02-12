@@ -20,5 +20,8 @@ vector <Trayectoria> accumulateTransform(vector <ParamTransformada> vector_trans
 
         if (isStats) out_trajectory << (i + 1) << " " << x << " " << y << " " << a << endl; // Para analisis estadistico
     }
+    
+    out_trajectory.close();
+
     return trajectory;
 };

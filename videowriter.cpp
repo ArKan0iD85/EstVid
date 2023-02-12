@@ -9,7 +9,7 @@ void videoWrite(VideoCapture cap, VideoWriter outVideo, Mat T, vector <ParamTran
     int progress = 0;
     int k = 0;
 
-    cout << "\nCreating stabilised video..." << endl;
+    cout << "\n\nCreating stabilised video..." << endl;
     while (k < max_frames - 1) { // no procesamos el último frame, ya que no tiene una transformada de trayectoria válida
         cap >> cur;
 
@@ -34,28 +34,11 @@ void videoWrite(VideoCapture cap, VideoWriter outVideo, Mat T, vector <ParamTran
 
         outVideo.write(cur2);
 
-        // Mostramos el video original y el estabilizado a la vez en una ventana, si el usuario lo pide.
-        if (isDemo) {
-            canvas = Mat::zeros(cur.rows, cur.cols * 2 + 10, cur.type());
-
-            cur.copyTo(canvas(Range::all(), Range(0, cur2.cols)));
-            cur2.copyTo(canvas(Range::all(), Range(cur2.cols + 10, cur2.cols * 2 + 10)));
-
-            // Si la ventana es demasiado grande para caber en la pantalla, la escalamos a la mitad. Debería ser suficiente.
-            if (canvas.cols > 1460) {
-                resize(canvas, canvas, Size(int(canvas.cols / 1.25), int(canvas.rows / 1.25)));
-            }
-
-            imshow("Before and after", canvas);
-            waitKey(wK_delay);
-        }
-
         progress = (k * 100 / max_frames);
         cout << "\r" << setw(-10) << printBarProg(progress) << " " << progress + 1 << "% completed." << flush;
         k++;
     }
-    cout << "\nOperation completed successfully.\n" << endl;
-    cout << "\nPlease check the folder \\output for the stabilised video.\n\n" << endl;
+    cout << "\n\nOperation completed successfully.\n" << endl;
 
     cur.release();
     cur2.release();
