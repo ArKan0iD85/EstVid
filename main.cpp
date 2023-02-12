@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
         if (strcmp(argv[i], "-d") == 0) { isDemo = true; }
         if (strcmp(argv[i], "-s") == 0) { isStats = true; }
     }
-
+    
     if (CreateDirectory(L"stats", NULL))
     {
         // Directorio creado
@@ -146,6 +146,7 @@ int main(int argc, char* argv[])
 
             return -1;
         }
+        int screen_width = GetSystemMetrics(SM_CXSCREEN);
         displayDemo(vid1, vid2, max_frames, wK_delay);
 
         vid1.release();

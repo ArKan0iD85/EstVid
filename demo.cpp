@@ -20,7 +20,7 @@ int displayDemo(VideoCapture inVid, VideoCapture outVid, int maxframes, int dela
         frame1.copyTo(canvas(Range::all(), Range(0, frame2.cols)));
         frame2.copyTo(canvas(Range::all(), Range(frame2.cols + 10, frame2.cols * 2 + 10)));
 
-        // Si la ventana es demasiado grande para caber en la pantalla, la escalamos a la mitad. Debería ser suficiente.
+        // Si la ventana es demasiado grande para caber en la pantalla, la escalamos a la mitad.
         if (canvas.cols > 1480) {
             resize(canvas, canvas, Size(int(canvas.cols / 1.25), int(canvas.rows / 1.25)));
         }
