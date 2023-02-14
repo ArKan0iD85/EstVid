@@ -50,32 +50,34 @@ int main(int argc, char* argv[])
         if (strcmp(argv[i], "-d") == 0) { isDemo = true; }
         if (strcmp(argv[i], "-s") == 0) { isStats = true; }
     }
-    
-    if (CreateDirectory(L"stats", NULL))
-    {
-        // Directorio creado
-    }
-    else if (ERROR_ALREADY_EXISTS == GetLastError())
-    {
-        cerr << "Directory already exists." << endl;
-    }
-    else
-    {
-        cerr << "Cannot create the required directory '/stats'." << endl;
-    }
-    
+
     if (CreateDirectory(L"output", NULL))
     {
         // Directorio creado
     }
     else if (ERROR_ALREADY_EXISTS == GetLastError())
     {
-        cerr << "Directory already exists." << endl;
+        cerr << "Directory /output already exists. Using it..." << endl;
     }
     else
     {
-        cerr << "Cannot create the required directory '/output'." << endl;
+        cerr << "Cannot create the required directory /output." << endl;
     }
+
+    if (CreateDirectory(L"stats", NULL))
+    {
+        // Directorio creado
+    }
+    else if (ERROR_ALREADY_EXISTS == GetLastError())
+    {
+        cerr << "Directory /stats already exists. Using it..." << endl;
+    }
+    else
+    {
+        cerr << "Cannot create the required directory /stats." << endl;
+    }
+    
+
 
     // Para analisis estadistico
     ofstream out_transform("stats/prev_to_cur_transformation.txt");
@@ -116,6 +118,7 @@ int main(int argc, char* argv[])
     int fourcc = VideoWriter::fourcc('m', 'p', '4', 'v');
 
     VideoWriter outVideo("./output/" + output, fourcc, fps, Size(frame_width, frame_height));
+;
 
     // Compruebo que puedo crear el video de salida
     if (!outVideo.isOpened())
@@ -126,7 +129,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    videoWrite(cap, outVideo, T, new_prev_to_cur_transform, aspectRatio, wK_delay, max_frames, ZOOM_IMAGEN, isDemo);
+    videoWrite(cap, outVideo, T, new_prev_to_cur_transform, aspectRatio, wK_delay, max_frames, ZOOM_IMAGEN);
     
     // Release resources
     cap.release();
@@ -136,9 +139,18 @@ int main(int argc, char* argv[])
     outVideo.release();
 
     if(isDemo) { 
-        waitKey(500);
+        //waitKey(500);
         VideoCapture vid1(input);
         VideoCapture vid2("./output/" + output);
+        VideoWriter demoVideo("./output/demo_" + output, fourcc, fps, Size(frame_width*2, frame_height));
+
+        if (!demoVideo.isOpened())
+        {
+            cerr << "\nCannot create the demo file.\n" << endl;
+            system("pause"); // WINDOWS ONLY
+
+            return -1;
+        }
         if (!vid1.isOpened() || !vid2.isOpened())
         {
             cerr << "\nCannot read the videos.\n" << endl;
@@ -146,14 +158,22 @@ int main(int argc, char* argv[])
 
             return -1;
         }
-        int screen_width = GetSystemMetrics(SM_CXSCREEN);
-        displayDemo(vid1, vid2, max_frames, wK_delay);
+
+        //int screen_width = GetSystemMetrics(SM_CXSCREEN);
+        displayDemo(vid1, vid2, demoVideo, max_frames, wK_delay);
 
         vid1.release();
         vid2.release();
+        demoVideo.release();
     }
 
-    cout << "\nPlease check the /output folder for the stabilised video '"<< output <<  "'\n\n" << endl;
+    cout << "\n\n\nOperation completed successfully." << endl;
+    if(isDemo){
+        cout << "\nPlease, check the /output folder for the stabilised and comparison videos.\n\n" << endl;
+    }
+    else {
+        cout << "\nPlease, check the /output folder for the stabilised video '" << output << "'\n\n" << endl;
+    }
 
     destroyAllWindows();
 

@@ -3,37 +3,33 @@
 using namespace std;
 using namespace cv;
 
-int displayDemo(VideoCapture inVid, VideoCapture outVid, int maxframes, int delay) {
+int displayDemo(VideoCapture inVid, VideoCapture outVid, VideoWriter demoVid, int maxframes, int delay) {
     Mat frame1, frame2, canvas;
-    int k = 1;
+    int k = 0;
+    int progress = 0;
 
-    inVid >> frame1;
-    outVid >> frame2;
-
+    cout << "\n\nCreating comparison video..." << endl;
     while (k < maxframes - 1) {
-        canvas = Mat::zeros(frame1.rows, frame1.cols * 2 + 10, frame1.type());
+        inVid >> frame1;
+        outVid >> frame2;
+        
+        canvas = Mat::zeros(frame1.rows, frame1.cols * 2, frame1.type());
 
         if (frame1.data == NULL || frame2.data == NULL) {
             break;
         }
 
-        frame1.copyTo(canvas(Range::all(), Range(0, frame2.cols)));
-        frame2.copyTo(canvas(Range::all(), Range(frame2.cols + 10, frame2.cols * 2 + 10)));
+        frame1.copyTo(canvas(Range::all(), Range(0, frame1.cols)));
+        frame2.copyTo(canvas(Range::all(), Range(frame1.cols, frame1.cols * 2)));
 
-        // Si la ventana es demasiado grande para caber en la pantalla, la escalamos a la mitad.
-        if (canvas.cols > 1480) {
-            resize(canvas, canvas, Size(int(canvas.cols / 1.25), int(canvas.rows / 1.25)));
-        }
+        demoVid.write(canvas);
 
-        imshow("Before and after", canvas);
-        waitKey(delay);
-
-        inVid >> frame1;
-        outVid >> frame2;
-
+        progress = (k * 100 / maxframes);
+        cout << "\r" << setw(-10) << printBarProg(progress) << " " << progress + 1 << "% completed." << flush;
         k++;
     }
 
+    demoVid.release();
     canvas.release();
     return 0;
 }

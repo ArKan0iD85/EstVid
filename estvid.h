@@ -52,8 +52,8 @@ vector <Trayectoria> smoothTransform(vector <Trayectoria> trajectory, int suaviz
 
 vector <ParamTransformada> calcNewFrames(vector <ParamTransformada> original_trajectory, vector <Trayectoria> smoothed_trajectory, bool isStats, ofstream &out_new_transform);
 
-void videoWrite(VideoCapture inVid, VideoWriter outVid, Mat T, vector <ParamTransformada> newTrans, int aspectRatio, int delay, int maxFrames, int zoom, bool demo);
+void videoWrite(VideoCapture inVid, VideoWriter outVid, Mat T, vector <ParamTransformada> newTrans, int aspectRatio, int delay, int maxFrames, int zoom);
 
-int displayDemo(VideoCapture inVid, VideoCapture outVidStr, int maxframes, int delay);
+int displayDemo(VideoCapture inVid, VideoCapture outVidStr, VideoWriter demoVid, int maxframes, int delay);
 
 #endif // !ESTVID_H
