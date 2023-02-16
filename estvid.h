@@ -38,8 +38,6 @@ struct Trayectoria
 
 string printBarProg(int x);
 
-string getVideoInfo(string &in, string &out, string &demo, string &stats);
-
 int getVideoData(VideoCapture video, int &max_frames, int &fps, int &frame_width, int &frame_height);
 
 void showInfo(string in, string out, int max, int fps, int width, int height, int suavizado, int zoom, bool demo, bool stats);
