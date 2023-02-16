@@ -53,7 +53,7 @@ void showInfo(string in, string out, int max, int fps, int width, int height, in
     cout << "--------------------------------------------------\n\n" << endl;
 
     cout << "User values" << endl;
-    cout << "----------------------------------------------------" << endl;
+    cout << "--------------------------------------------------" << endl;
     cout << "Smoothing value: " << suavizado << " frames" << endl;
     cout << "Image zoom value: " << zoom << " pixels" << endl;
     if (demo) { cout << "Side-by-side demonstration: Y" << endl; }
